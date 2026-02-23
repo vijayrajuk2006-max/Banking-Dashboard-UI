@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking Dashboard</title>
+
+<style>
+:root{
+  --primary:#1d4ed8;
+  --dark:#111827;
+  --light:#f3f4f6;
+  --gray:#6b7280;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI', sans-serif;
+}
+
+body{
+  background:var(--light);
+  display:flex;
+  min-height:100vh;
+}
+
+/* Sidebar */
+.sidebar{
+  width:220px;
+  background:var(--dark);
+  color:white;
+  padding:20px;
+}
+
+.sidebar h2{
+  color:var(--primary);
+  margin-bottom:30px;
+}
+
+.sidebar a{
+  display:block;
+  margin-bottom:15px;
+  text-decoration:none;
+  color:#d1d5db;
+  font-size:14px;
+}
+
+.sidebar a:hover{
+  color:white;
+}
+
+/* Main */
+.main{
+  flex:1;
+  padding:30px;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:8px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08);
+  margin-bottom:25px;
+}
+
+.balance{
+  font-size:28px;
+  font-weight:bold;
+  color:var(--primary);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td{
+  padding:10px;
+  border-bottom:1px solid #e5e7eb;
+  font-size:14px;
+  text-align:left;
+}
+
+th{
+  background:#f9fafb;
+}
+
+/* Transfer Form */
+form input{
+  padding:8px;
+  margin-right:10px;
+  margin-bottom:10px;
+  border:1px solid #ddd;
+  border-radius:5px;
+}
+
+form button{
+  padding:8px 15px;
+  border:none;
+  background:var(--primary);
+  color:white;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  body{
+    flex-direction:column;
+  }
+  .sidebar{
+    width:100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>BankPro</h2>
+  <a href="#">Dashboard</a>
+  <a href="#">Accounts</a>
+  <a href="#">Transactions</a>
+  <a href="#">Settings</a>
+</div>
+
+<div class="main">
+
+  <div class="header">
+    <h1>Account Overview</h1>
+    <p>Welcome, Vijay 👋</p>
+  </div>
+
+  <!-- Balance Card -->
+  <div class="card">
+    <h3>Current Balance</h3>
+    <div class="balance">$10,000.00</div>
+  </div>
+
+  <!-- Transactions -->
+  <div class="card">
+    <h3>Recent Transactions</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody id="transactionTable">
+        <tr>
+          <td>2026-02-01</td>
+          <td>Salary Credit</td>
+          <td style="color:green;">+$2,000</td>
+        </tr>
+        <tr>
+          <td>2026-02-05</td>
+          <td>Online Shopping</td>
+          <td style="color:red;">-$150</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Transfer Money -->
+  <div class="card">
+    <h3>Transfer Money</h3>
+    <form onsubmit="transferMoney(event)">
+      <input type="text" id="recipient" placeholder="Recipient Name" required>
+      <input type="number" id="amount" placeholder="Amount" required>
+      <button type="submit">Transfer</button>
+    </form>
+  </div>
+
+</div>
+
+<script>
+let balance = 10000;
+
+function transferMoney(e){
+  e.preventDefault();
+
+  const recipient = document.getElementById("recipient").value.trim();
+  const amount = parseFloat(document.getElementById("amount").value);
+
+  if(amount > balance){
+    alert("Insufficient balance!");
+    return;
+  }
+
+  balance -= amount;
+
+  document.querySelector(".balance").innerText =
+    "$" + balance.toFixed(2);
+
+  const table = document.getElementById("transactionTable");
+
+  table.innerHTML += `
+    <tr>
+      <td>${new Date().toISOString().split('T')[0]}</td>
+      <td>Transfer to ${recipient}</td>
+      <td style="color:red;">-$${amount}</td>
+    </tr>
+  `;
+
+  document.getElementById("recipient").value = "";
+  document.getElementById("amount").value = "";
+}
+</script>
+
+</body>
+</html>
